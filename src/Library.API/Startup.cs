@@ -53,7 +53,10 @@ namespace Library.API
                 app.UseExceptionHandler();
             }
             AutoMapper.Mapper.Initialize(cfg =>
-            {
+            {//we need to ensure firstname & lastname in entity are calculated as Name in dto & same for age 
+             //instead of DOB. we need projection. projection transforms a source to a destination beyond
+             //flattening the object model, so we must specify this through custom member mapping.
+             //to do that we call into ForMember and give (destination property name, how to calculate the value)
                 cfg.CreateMap<Entities.Author, Models.AuthorDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
                      $"{src.FirstName} {src.LastName}"))

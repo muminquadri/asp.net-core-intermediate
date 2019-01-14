@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Library.API.Controllers
 {
     [Route("api/authors")]
-    public class AuthorsController: Controller
+    public class AuthorsController : Controller
     {
         private ILibraryRepository _libraryRepository;
         public AuthorsController(ILibraryRepository libraryRepository)
@@ -21,6 +21,7 @@ namespace Library.API.Controllers
         [HttpGet]
         public IActionResult GetAuthors()
         {
+          //  throw new Exception("Exception testing");
             var authorsFromRepo = _libraryRepository.GetAuthors();
             var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
             //var authors = new List<AuthorDto>();
@@ -34,7 +35,17 @@ namespace Library.API.Controllers
             //        Genre = author.Genre
             //    });
             //}
-            return new JsonResult(authors);
+            return Ok(authors);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetAuthor(Guid id)
+        {
+
+            var authorFromRepo = _libraryRepository.GetAuthor(id);
+            if(authorFromRepo == null) { return NotFound(); }
+            var author = Mapper.Map<Models.AuthorDto>(authorFromRepo);
+            return Ok(author);
         }
     }
 }

@@ -41,17 +41,27 @@ namespace Library.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             ILoggerFactory loggerFactory, LibraryContext libraryContext)
-        {           
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseExceptionHandler(
+                    appBuilder =>
+                { 
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("Exception occurred in Production environment");
+                    });
+                });
+
             }
+        
             AutoMapper.Mapper.Initialize(cfg =>
             {//we need to ensure firstname & lastname in entity are calculated as Name in dto & same for age 
              //instead of DOB. we need projection. projection transforms a source to a destination beyond

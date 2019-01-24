@@ -72,6 +72,7 @@ namespace Library.API
                      $"{src.FirstName} {src.LastName}"))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
                      src.DateOfBirth.GetCurrentAge()));
+                cfg.CreateMap<Entities.Book, Models.BookDto>();
             }
                 );
             libraryContext.EnsureSeedDataForContext();
